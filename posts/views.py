@@ -8,6 +8,9 @@ from drf_api.permissions import IsOwnerOrReadOnly
 
 
 class PostList(APIView):
+    """
+    List posts or create a post if logged in
+    """
     serializer_class = PostSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly
@@ -35,8 +38,11 @@ class PostList(APIView):
 
 
 class PostDetail(APIView):
-    serializer_class = PostSerializer
+    """
+    Retrieve a post and edit or delete it if you own it
+    """
     permission_classes = [IsOwnerOrReadOnly]
+    serializer_class = PostSerializer
 
     def get_object(self, pk):
         try:
@@ -61,10 +67,12 @@ class PostDetail(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
 
     def delete(self, request, pk):
-        post=self.get_object(pk)
+        post = self.get_object(pk)
         post.delete()
         return Response(
             status=status.HTTP_204_NO_CONTENT
