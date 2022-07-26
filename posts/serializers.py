@@ -11,7 +11,7 @@ class PostSerializer(serializers.ModelSerializer):
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.ReadOnlyField()
     comments_count = serializers.ReadOnlyField()
-    
+
 
     def validate_image(self, value):
         if value.size > 1024 * 1024 * 2:
@@ -38,7 +38,7 @@ class PostSerializer(serializers.ModelSerializer):
             liked = Like.objects.filter(
                 owner=user, post=obj
             ).first()
-            return like.id if liked else None
+            return liked.id if liked else None
         return None
 
     class Meta:
